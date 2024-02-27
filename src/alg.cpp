@@ -7,13 +7,7 @@ int main() {
     return 0;
 }
 int gcd(int a, int b) {
-    int max = 0;
-    if (a > b) {
-        max = a;
-    }
-    else {
-        max = b;
-    }
+    int max = (a > b) ? a : b;
     int y = 0;
     for (int i = 1; i < max; i++) {
         if ((a % i == 0) && (b % i == 0)) {
