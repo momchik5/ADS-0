@@ -2,7 +2,7 @@
 #include <iostream>
 #include "alg.h"
 
-int gcd(int, int);
+int gcd(int, int );
 int main() {
     std::cout << gcd(10, 15) << std::endl;
     return 0;
