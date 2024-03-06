@@ -1,7 +1,6 @@
 //"Copyright 2024 Microsoft Corporation"
 #include <cstdint>
 #include "alg.h"
-#include <cstdio>
 
 double pown(double value, uint16_t n) {
   double r = value;
