@@ -6,15 +6,15 @@
 
 template<typename T, int size>
 class TStack {
-private:
+ private:
     T* array;
     int top;
 
-public:
+ public:
     TStack() : top(0) {
         array = new T[size];
     }
-    
+
     T pop() {
         if (top == 0) {
             throw "Empty!";
