@@ -34,8 +34,7 @@ std::string infx2pstfx(std::string inf) {
             d.pop();
         } else if (prioritet(infix[i]) > prioritet(d.check())) {
             d.push(infix[i]);
-        }
-   else {
+        } else {
        while (true) {
             if (d.isempty()) {
                 break;
@@ -63,12 +62,10 @@ int eval(std::string post) {
     for (int i = 0; i < post.length(); i++) {
         if (isdigit(post[i])) {
             stroka += post[i];
-        }
-        else if (stroka.length() && post[i] == ' ') {
+        } else if (stroka.length() && post[i] == ' ') {
             operand.push(atoi(stroka.c_str()));
             stroka = "";
-        }
-        else {
+        } else {
             int two = operand.pop();
             int one = operand.pop();
             operand.push(schet(one, two, post[i]));
