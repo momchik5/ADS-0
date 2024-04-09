@@ -35,14 +35,13 @@ std::string infx2pstfx(std::string inf) {
         } else if (prioritet(infix[i]) > prioritet(d.check())) {
             d.push(infix[i]);
         }
-else {
-    while (true) {
-        if (d.isempty()) {
-            break;
-        }
-        else if (!(prioritet(infix[i]) <= prioritet(d.check()))) {
-            break;
-        }
+   else {
+       while (true) {
+            if (d.isempty()) {
+                break;
+            } else if (!(prioritet(infix[i]) <= prioritet(d.check()))) {
+                break;
+       }
         postfix += d.pop();
         if (i != infix.length() - 1) {
             postfix += " ";
