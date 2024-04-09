@@ -62,7 +62,6 @@ return postfix;
 int eval(std::string post) {
     std::string stroka = "";
     TStack<int, 100> operand;
-
     for (int i = 0; i < post.length(); i++) {
         if (isdigit(post[i])) {
             stroka += post[i];
@@ -79,7 +78,7 @@ int eval(std::string post) {
     }
     return operand.pop();
 }
- int prioritet(char c) {
+int prioritet(char c) {
     if (c == '(') {
         return 0;
     }
@@ -96,7 +95,7 @@ int eval(std::string post) {
         throw "Error!";
     }
 }
- int schet(int x, int y, char znak) {
+int schet(int x, int y, char znak) {
      switch (znak) {
      case '+':
          return x + y;
