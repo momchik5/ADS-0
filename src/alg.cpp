@@ -4,7 +4,6 @@
 #include "tstack.h"
 
 int prioritet(char);
-int schet(int, int, char);
 
 std::string infx2pstfx(std::string inf) {
     std::string postfix = "";
@@ -57,21 +56,45 @@ return postfix;
 }
 
 int eval(std::string post) {
-    std::string stroka = "";
-    TStack<int, 100> operand;
-    for (int i = 0; i < post.length(); i++) {
-        if (isdigit(post[i])) {
-            stroka += post[i];
-        } else if (stroka.length() && post[i] == ' ') {
-            operand.push(atoi(stroka.c_str()));
-            stroka = "";
-        } else {
-            int two = operand.pop();
-            int one = operand.pop();
-            operand.push(schet(one, two, post[i]));
+  std::string str = "";
+  TStack<int, 100> operands;
+
+  for (int i = 0; i < post.length(); i++) {
+    if (isdigit(post[i])) {
+      str += post[i];
+    } else if (str.length() && post[i] == ' ') {
+      operands.push(atoi(time.c_str()));
+      str = "";
+    } else {
+      switch (post[i]) {
+        case '+': {
+          int two = operands.pop();
+          int one = operands.pop();
+          operands.push(one + two);
+          break;
         }
+        case '-': {
+          int two = operands.pop();
+          int one = operands.pop();
+          operands.push(one - two);
+          break;
+        }
+        case '*': {
+          int two = operands.pop();
+          int one = operands.pop();
+          operands.push(one * two);
+          break;
+        }
+        case '/': {
+          int two = operands.pop();
+          int one = operands.pop();
+          operands.push(one / two);
+          break;
+        }
+      }
     }
-    return operand.pop();
+  }
+  return operands.pop();
 }
 int prioritet(char c) {
     if (c == '(') {
@@ -86,17 +109,4 @@ int prioritet(char c) {
         throw "Error!";
     }
 }
-int schet(int x, int y, char znak) {
-     switch (znak) {
-     case '+':
-         return x + y;
-     case '-':
-         return x - y;
-     case '*':
-         return x * y;
-     case '/':
-         return x / y;
-     default:
-         return 0;
-  }
-}
+
