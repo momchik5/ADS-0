@@ -1,112 +1,46 @@
-// Copyright 2021 NNTU-CS
+// Cop// Copyright 2022 NNTU-CS
+#ifndef INCLUDE_TPQUEUE_H_
+#define INCLUDE_TPQUEUE_H_
 #include <string>
-#include <map>
-#include "tstack.h"
 
-int prioritet(char);
+template<typename T, int size>
+class TPQueue {
+private:
+    T *arr;
+    int begin, end, count;
 
-std::string infx2pstfx(std::string inf) {
-    std::string postfix = "";
-    TStack<char, 100> d;
-    for (int i = 0; i < infix.length(); i++) {
-        if (isdigit(infix[i])) {
-            postfix += infix[i];
-            if (i != infix.length() - 1) {
-                postfix += " ";
-            }
-        } else if (infix[i] == '(') {
-            d.push(infix[i]);
-        } else if (d.isempty()) {
-            d.push(infix[i]);
-        } else if (infix[i] == ')') {
-            while (true) {
-                if (d.isempty()) {
-                    break;
-                } else if (d.check() == '(') {
-                    break;
-                }
-                postfix += d.pop();
-                if (i != infix.length() - 1) {
-                    postfix += " ";
-                }
-            }
-            d.pop();
-        } else if (prioritet(infix[i]) > prioritet(d.check())) {
-            d.push(infix[i]);
-        } else {
-       while (true) {
-            if (d.isempty()) {
+public:
+    TPQueue() : begin(0), end(0), count(0), arr(new T[size]) {}
+    void push(const T& item) {
+        if (count >= size) {
+            throw std::string("Full");
+        }
+        int index = end;
+        count++;
+        for (int i = begin; i < end; i++) {
+            if (arr[i].prior < item.prior) {
+                index = i;
                 break;
-            } else if (!(prioritet(infix[i]) <= prioritet(d.check()))) {
-                break;
-       }
-        postfix += d.pop();
-        if (i != infix.length() - 1) {
-            postfix += " ";
+            }
         }
+        for (int i = end; i > index; i--) {
+            arr[(i % size)] = arr[((i - 1) % size)];
+        }
+        arr[(index % size)] = item;
+        end = (end + 1) % size;
     }
-    d.push(infix[i]);
-}
-}
-while (!d.isempty()) {
-    postfix += " ";
-    postfix += d.pop();
-}
-return postfix;
-}
-
-int eval(std::string post) {
-  std::string str = "";
-  TStack<int, 100> operands;
-
-  for (int i = 0; i < post.length(); i++) {
-    if (isdigit(post[i])) {
-      str += post[i];
-    } else if (str.length() && post[i] == ' ') {
-      operands.push(atoi(time.c_str()));
-      str = "";
-    } else {
-      switch (post[i]) {
-        case '+': {
-          int two = operands.pop();
-          int one = operands.pop();
-          operands.push(one + two);
-          break;
+    T pop() {
+        if (count == 0) {
+            throw std::string("Empty");
         }
-        case '-': {
-          int two = operands.pop();
-          int one = operands.pop();
-          operands.push(one - two);
-          break;
-        }
-        case '*': {
-          int two = operands.pop();
-          int one = operands.pop();
-          operands.push(one * two);
-          break;
-        }
-        case '/': {
-          int two = operands.pop();
-          int one = operands.pop();
-          operands.push(one / two);
-          break;
-        }
-      }
+        count--;
+        T result = arr[begin];
+        begin = (begin + 1) % size;
+        return result;
     }
-  }
-  return operands.pop();
-}
-int prioritet(char c) {
-    if (c == '(') {
-        return 0;
-    } else if (c == ')') {
-        return 1;
-    } else if ((c == '+') || (c == '-')) {
-        return 2;
-    } else if ((c == '*') || (c == '/')) {
-        return 3;
-    } else {
-        throw "Error!";
-    }
-}
-
+};
+struct SYM {
+  char ch;
+  int prior;
+};
+#endif  // INCLUDE_TPQUEUE_H_
