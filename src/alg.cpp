@@ -1,46 +1,76 @@
-// Cop// Copyright 2022 NNTU-CS
-#ifndef INCLUDE_TPQUEUE_H_
-#define INCLUDE_TPQUEUE_H_
-#include <string>
+// Copyright 2021 NNTU-CS
+#ifndef INCLUDE_BST_H_
+#define INCLUDE_BST_H_
 
-template<typename T, int size>
-class TPQueue {
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+template <typename T>
+class BinarySearchTree {
+ public:
+    struct TreeNode {
+        T value;
+        int count;
+        TreeNode* left;
+        TreeNode* right;
+    };
+
  private:
-    T *arr;
-    int begin, end, count;
+    TreeNode* root;
+
+    TreeNode* insert(TreeNode* node, T value) {
+        if (node == nullptr) {
+            node = new TreeNode;
+            node->value = value;
+            node->count = 1;
+            node->left = node->right = nullptr;
+        } else if (value < node->value) {
+            node->left = insert(node->left, value);
+        } else if (value > node->value) {
+            node->right = insert(node->right, value);
+        } else {
+            node->count++;
+        }
+        return node;
+    }
+
+    int calculateDepth(TreeNode* node) {
+        if (node == nullptr) {
+            return 0;
+        } else {
+            int leftDepth = calculateDepth(node->left);
+            int rightDepth = calculateDepth(node->right);
+            return std::max(leftDepth, rightDepth) + 1;
+        }
+    }
+
+    int find(TreeNode* node, T value) {
+        if (node == nullptr) {
+            return 0;
+        } else if (value == node->value) {
+            return node->count;
+        } else if (value < node->value) {
+            return find(node->left, value);
+        } else {
+            return find(node->right, value);
+        }
+    }
 
  public:
-    TPQueue() : begin(0), end(0), count(0), arr(new T[size]) {}
-    void push(const T& item) {
-        if (count >= size) {
-            throw std::string("Full");
-        }
-        int index = end;
-        count++;
-        for (int i = begin; i < end; i++) {
-            if (arr[i].prior < item.prior) {
-                index = i;
-                break;
-            }
-        }
-        for (int i = end; i > index; i--) {
-            arr[(i % size)] = arr[((i - 1) % size)];
-        }
-        arr[(index % size)] = item;
-        end = (end + 1) % size;
+    BinarySearchTree() : root(nullptr) {}
+
+    void add(T value) {
+        root = insert(root, value);
     }
-    T pop() {
-        if (count == 0) {
-            throw std::string("Empty");
-        }
-        count--;
-        T result = arr[begin];
-        begin = (begin + 1) % size;
-        return result;
+
+    int depth() {
+        return calculateDepth(root) - 1;
+    }
+
+    int search(T value) {
+        return find(root, value);
     }
 };
-struct SYM {
-  char ch;
-  int prior;
-};
-#endif  // INCLUDE_TPQUEUE_H_
+
+#endif  // INCLUDE_BST_H_
