@@ -3,8 +3,8 @@
 #include <fstream>
 #include <locale>
 #include <cstdlib>
-#include "bst.h
-BST<std::string> makeTree(const char* filename) {  
+#include "bst.h"
+BST<std::string> makeTree(const char* filename) {
     std::ifstream file(filename);
     if (!file) {
         std::cout << "File error!" << std::endl;
@@ -23,7 +23,7 @@ BST<std::string> makeTree(const char* filename) {
             tree.add(word);
             word.clear();
         }
-    } 
+    }
     file.close();
     return tree;
 }
