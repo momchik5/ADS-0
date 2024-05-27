@@ -14,7 +14,8 @@ BST<std::string> makeTree(const char* filename) {
     std::string word;
     BST<std::string> tree;
     while (file.get(symbol)) {
-        if ((symbol >= 'A' && symbol <= 'Z') || (symbol >= 'a' && symbol <= 'z')) {
+        if ((symbol >= 'A' && symbol <= 'Z')
+            || (symbol >= 'a' && symbol <= 'z')) {
             if (symbol >= 'A' && symbol <= 'Z') {
                 symbol = symbol + ('a' - 'A');
             }
