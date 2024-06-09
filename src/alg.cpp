@@ -1,30 +1,89 @@
 // Copyright 2021 NNTU-CS
+#ifndef INCLUDE_TREE_H_
+#define INCLUDE_TREE_H_
+
 #include <iostream>
-#include <fstream>
-#include <locale>
-#include <cstdlib>
-#include "bst.h"
-BST<std::string> makeTree(const char* filename) {
-    std::ifstream file(filename);
-    if (!file) {
-        std::cout << "File error!" << std::endl;
-        return BST<std::string>();
-    }
+#include <vector>
+
+struct stem {
+    std::vector<stem*> leaves;
     char symbol;
-    std::string word;
-    BST<std::string> tree;
-    while (file.get(symbol)) {
-        if ((symbol >= 'A' && symbol <= 'Z')
-            || (symbol >= 'a' && symbol <= 'z')) {
-            if (symbol >= 'A' && symbol <= 'Z') {
-                symbol = symbol + ('a' - 'A');
+
+    explicit stem(char symbol) : symbol(symbol) {}
+};
+
+class Tree {
+ private:
+    stem* root;
+
+    std::vector<char> filterSymbols(std::vector<char> numbers, char symbol) {
+        std::vector<char> mainVect;
+        for (char a : numbers) {
+            if (a != symbol) {
+                mainVect.push_back(a);
             }
-            word += symbol;
-        } else if (!word.empty()) {
-            tree.add(word);
-            word.clear();
+        }
+        return mainVect;
+    }
+
+    void createChildren(stem* cur, std::vector<char> num) {
+        cur->leaves.resize(num.size());
+        for (int i = 0; i < num.size(); i++) {
+            cur->leaves[i] = new stem(num[i]);
         }
     }
-    file.close();
-    return tree;
-}
+
+    void addLeafs(std::vector<char> num, stem* cur) {
+        std::vector<char> updVect;
+        updVect = filterSymbols(num, cur->symbol);
+        if (!updVect.empty()) {
+            createChildren(cur, updVect);
+            for (int i = 0; i < cur->leaves.size(); i++) {
+                addLeafs(updVect, cur->leaves[i]);
+            }
+        }
+    }
+
+ public:
+    Tree() : root(nullptr) {}
+
+    explicit Tree(std::vector<char> sym) {
+        root = new stem(' ');
+        addLeafs(sym, root);
+    }
+
+    stem* getRoot() {
+        return root;
+    }
+
+    void displayBranches(stem* node) {
+        if (node->leaves.empty()) {
+            std::cout << node->symbol << std::endl;
+            return;
+        }
+        if (!node->leaves.empty()) {
+            for (int i = 0; i < node->leaves.size(); i++) {
+                if (node->symbol != ' ') {
+                    std::cout << node->symbol;
+                }
+                displayBranches(node->leaves[i]);
+            }
+        } else {
+            std::cout << std::endl;
+        }
+    }
+
+    void deleteTree(stem* node) {
+        if (node) {
+            for (stem* child : node->leaves) {
+                deleteTree(child);
+            }
+            delete node;
+        }
+    }
+};
+
+int factorial(int);
+std::vector<char> createNumber(stem*, int, std::vector<char>);
+
+#endif  // INCLUDE_TREE_H_
